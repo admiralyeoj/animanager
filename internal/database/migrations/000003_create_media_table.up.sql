@@ -6,8 +6,8 @@ CREATE TABLE media (
     format_id INT NOT NULL,
     duration INT,                   -- Duration of the media in minutes
     episodes INT,                   -- Number of episodes (if applicable)
-    cover_image TEXT, 
-    banner_image TEXT,             -- 
+    cover_img TEXT, 
+    banner_img TEXT,             -- 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

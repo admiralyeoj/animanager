@@ -14,7 +14,7 @@ func main() {
 	// load .env file
 	godotenv.Load()
 
-	postgresURI := os.Getenv("DATABASE_URL")
+	postgresURI := os.Getenv("DB_URL")
 	db, err := sql.Open("postgres", postgresURI)
 	if err != nil {
 		log.Panic(err)

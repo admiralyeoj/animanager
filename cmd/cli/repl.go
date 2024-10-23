@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	commands "github.com/admiralyeoj/anime-announcements/cmd/app"
 )
 
 // cliName is the name used in the repl prompts
@@ -25,7 +23,7 @@ func startRepl() {
 
 		commandName := words[0]
 
-		command, exists := commands.GetCommands()[commandName]
+		command, exists := GetCommands()[commandName]
 		if exists {
 			if command.Callback != nil {
 				err := command.Callback()
