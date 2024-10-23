@@ -4,36 +4,34 @@ import (
 	"log"
 	"os"
 
+	"github.com/caarlos0/env"
 	"github.com/joho/godotenv"
 )
 
 // DatabaseConfig represents the configuration for the database
-type PostgresDBConfig struct {
-	URL      string
-	Username string
-	Password string
-	Port     string
-	Name     string
+type DBConfig struct {
+	Name     string `env:"DB_NAME" json:",omitempty"`
+	Host     string `env:"DB_HOST, default=localhost" json:",omitempty"`
+	User     string `env:"DB_USER" json:",omitempty"`
+	Password string `env:"DB_PASSWORD" json:"-"` // ignored by zap's JSON formatter
+	Port     string `env:"DB_PORT, default=5432" json:",omitempty"`
+	URL      string `env:"DB_URL" json:",omitempty"`
 }
 
-// LoadConfig reads the configuration from the .env file
-func LoadConfig() (*PostgresDBConfig, error) {
-	// Load environment variables from .env file
-	err := godotenv.Load()
+func LoadConfig() (*DBConfig, error) {
+	// Load the .env file, if it exists
+	err := godotenv.Load() // It loads .env from the root directory by default
 	if err != nil {
-		log.Println("Warning: .env file not found, using system environment variables.")
+		log.Println("No .env file found, using system environment variables.")
 	}
 
-	// Create the database configuration struct
-	config := &PostgresDBConfig{
-		URL:      getEnv("DATABASE_URL", "default_database_url"),
-		Username: getEnv("DATABASE_USERNAME", ""),
-		Password: getEnv("DATABASE_PASSWORD", ""),
-		Port:     getEnv("DATABASE_PORT", "5432"),
-		Name:     getEnv("DATABASE_NAME", ""),
+	// Parse the environment variables into the struct
+	config := DBConfig{}
+	if err := env.Parse(&config); err != nil {
+		return nil, err
 	}
 
-	return config, nil
+	return &config, nil
 }
 
 // getEnv retrieves the value of an environment variable or returns the fallback value

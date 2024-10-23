@@ -1,4 +1,4 @@
-package aniListModel
+package model
 
 type AiringSchedules []struct {
 	ID              int   `json:"id"`

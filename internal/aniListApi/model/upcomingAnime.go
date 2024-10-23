@@ -1,4 +1,4 @@
-package aniListModel
+package model
 
 type UpcomingAnime struct {
 	Page struct {

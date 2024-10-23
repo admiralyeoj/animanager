@@ -1,4 +1,4 @@
-package aniListModel
+package model
 
 type Media struct {
 	ID          string `json:"id"`
