@@ -6,6 +6,7 @@ import (
 	"time"
 
 	aniListModel "github.com/admiralyeoj/anime-announcements/internal/aniListApi/model"
+	"github.com/admiralyeoj/anime-announcements/util"
 	"github.com/machinebox/graphql"
 )
 
@@ -45,8 +46,8 @@ func (repo *aniListRepository) GetUpcomingAnime(startDate, endDate string) (aniL
 	`)
 
 	req.Var("page", 1)
-	req.Var("airingAtGreater", convertDateToTimestamp(startDate))
-	req.Var("airingAtLesser", convertDateToTimestamp(endDate))
+	req.Var("airingAtGreater", util.ConvertDateToTimestamp(startDate))
+	req.Var("airingAtLesser", util.ConvertDateToTimestamp(endDate))
 
 	req.Header.Set("Cache-Control", "no-cache")
 
@@ -60,18 +61,4 @@ func (repo *aniListRepository) GetUpcomingAnime(startDate, endDate string) (aniL
 	}
 
 	return respData, nil
-}
-
-func convertDateToTimestamp(dateStr string) int64 {
-	// Define the layout (format) for parsing
-	layout := "01/02/2006" // MM/DD/YYYY
-
-	// Parse the date string into a time.Time object
-	parsedTime, err := time.Parse(layout, dateStr)
-	if err != nil {
-		return 0
-	}
-
-	// Return the Unix timestamp
-	return parsedTime.Unix()
 }
