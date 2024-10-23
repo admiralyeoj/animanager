@@ -1,14 +1,10 @@
 package commands
 
-import (
-	"github.com/admiralyeoj/anime-announcements/configs"
-)
-
 type cliCommand struct {
 	name         string
 	description  string
-	Callback     func(cfg *configs.AniListConfig) error
-	CallbackArgs func(cfg *configs.AniListConfig, args ...string) error
+	Callback     func() error
+	CallbackArgs func(args ...string) error
 }
 
 func GetCommands() map[string]cliCommand {

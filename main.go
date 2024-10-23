@@ -5,10 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
-	"github.com/admiralyeoj/anime-announcements/configs"
-	"github.com/admiralyeoj/anime-announcements/internal/aniListApi"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
@@ -30,11 +27,5 @@ func main() {
 
 	fmt.Println("Connected to database")
 
-	aniListClient := aniListApi.NewClient(time.Second * 5)
-
-	cfg := &configs.AniListConfig{
-		AniListClient: aniListClient,
-	}
-
-	startRepl(cfg)
+	startRepl()
 }

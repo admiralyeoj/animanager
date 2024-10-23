@@ -1,50 +1,15 @@
-package aniListApi
+package repository
 
 import (
 	"context"
 	"log"
 	"time"
 
+	aniListModel "github.com/admiralyeoj/anime-announcements/internal/aniListApi/model"
 	"github.com/machinebox/graphql"
 )
 
-type UpcomingAnime struct {
-	Page struct {
-		AiringSchedules AiringSchedules `json:"airingSchedules"`
-	} `json:"Page"`
-}
-
-type AiringSchedules []struct {
-	ID              int   `json:"id"`
-	AiringAt        int   `json:"airingAt"`
-	Episode         int   `json:"episode"`
-	TimeUntilAiring int   `json:"timeUntilAiring"`
-	MediaId         int   `json:"mediaId"`
-	Media           Media `json:"media"`
-}
-
-type Media struct {
-	ID          string `json:"id"`
-	SiteUrl     string `json:"siteUrl"`
-	Type        string `json:"type"`
-	Format      string `json:"format"`
-	Duration    int    `json:"duration"`
-	Episodes    int    `json:"episodes"`
-	BannerImage string `json:"bannerImage"`
-	Title       struct {
-		English string `json:"english"`
-	} `json:"title"`
-	CoverImage struct {
-		Large string `json:"large"`
-	} `json:"coverImage"`
-	ExternalLinks []struct {
-		Site string `json:"site"`
-		Url  string `json:"url"`
-		Type string `json:"type"`
-	} `json:"externalLinks"`
-}
-
-func (c *Client) GetUpcomingAnime(startDate, endDate string) (UpcomingAnime, error) {
+func (repo *aniListRepository) GetUpcomingAnime(startDate, endDate string) (aniListModel.UpcomingAnime, error) {
 
 	// make a request
 	req := graphql.NewRequest(`
@@ -88,12 +53,11 @@ func (c *Client) GetUpcomingAnime(startDate, endDate string) (UpcomingAnime, err
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 
-	var respData UpcomingAnime
+	var respData aniListModel.UpcomingAnime
 	// var respData map[string]interface{}
-	if err := c.graphqlClient.Run(ctx, req, &respData); err != nil {
+	if err := repo.graphqlClient.Run(ctx, req, &respData); err != nil {
 		log.Fatal(err)
 	}
-	// fmt.Printf("%+v\n", respData)
 
 	return respData, nil
 }

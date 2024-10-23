@@ -1,17 +1,16 @@
-package commands
+package service
 
 import (
 	"fmt"
+	"log"
 	"strconv"
-
-	"github.com/admiralyeoj/anime-announcements/configs"
 )
 
-func Testing(cfg *configs.AniListConfig) error {
-	UpcomingAnimeResp, err := cfg.AniListClient.GetUpcomingAnime("10/25/2024", "10/26/2024")
+func (srv *aniListService) ImportUpcomingAnime(startDate, endDate string) error {
+	UpcomingAnimeResp, err := srv.aniListRepository.GetUpcomingAnime(startDate, endDate)
 
 	if err != nil {
-		fmt.Println("error")
+		log.Fatal(err)
 		return err
 	}
 
@@ -32,7 +31,6 @@ func Testing(cfg *configs.AniListConfig) error {
 		for _, link := range media.ExternalLinks {
 			fmt.Println(link.Site + " " + link.Url)
 		}
-
 	}
 
 	return nil

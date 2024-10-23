@@ -6,14 +6,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/admiralyeoj/anime-announcements/commands"
-	"github.com/admiralyeoj/anime-announcements/configs"
+	commands "github.com/admiralyeoj/anime-announcements/cmd/app"
 )
 
 // cliName is the name used in the repl prompts
 const cliName string = "Anime Announcements"
 
-func startRepl(cfg *configs.AniListConfig) {
+func startRepl() {
 	reader := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print(cliName + " > ")
@@ -29,7 +28,7 @@ func startRepl(cfg *configs.AniListConfig) {
 		command, exists := commands.GetCommands()[commandName]
 		if exists {
 			if command.Callback != nil {
-				err := command.Callback(cfg)
+				err := command.Callback()
 				if err != nil {
 					fmt.Println(err)
 				}
@@ -39,7 +38,7 @@ func startRepl(cfg *configs.AniListConfig) {
 					args = words[1:]
 				}
 
-				err := command.CallbackArgs(cfg, args...)
+				err := command.CallbackArgs(args...)
 				if err != nil {
 					fmt.Println(err)
 				}
