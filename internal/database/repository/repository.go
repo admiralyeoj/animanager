@@ -1,25 +1,29 @@
 package repository
 
 import (
+	"database/sql"
 	"sync"
 )
 
-// DatabaseRepository defines the interface for database repository actions
-type DatabaseRepository interface {
-}
-
-// databaseRepository is a concrete implementation of DatabaseRepository
-type databaseRepository struct {
+// DatabaseRepositories holds instances of different repositories
+type DatabaseRepositories struct {
+	media MediaRepository
 }
 
 // Use a pointer for the static instance
-var instance *databaseRepository
+var instance *DatabaseRepositories
 var once sync.Once
 
-// NewAniListRepository creates and returns a new instance of aniListRepository
-func NewDatabaseRepository() DatabaseRepository {
+// NewDatabaseRepositories creates and returns a new instance of DatabaseRepositories
+func NewDatabaseRepositories(db *sql.DB) *DatabaseRepositories {
 	once.Do(func() {
-		instance = &databaseRepository{}
+		// Initialize the repositories
+		mediaRepo := NewMediaRepository(db)
+
+		instance = &DatabaseRepositories{
+			media: mediaRepo, // This now matches the MediaRepository type
+			// Initialize other repositories here as needed
+		}
 	})
 
 	return instance

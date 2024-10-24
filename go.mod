@@ -11,7 +11,8 @@ require (
 )
 
 require (
-	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/matryer/is v1.4.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.27.0 // indirect
 )

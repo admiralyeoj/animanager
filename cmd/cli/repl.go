@@ -2,51 +2,80 @@ package main
 
 import (
 	"bufio"
+	"database/sql"
 	"fmt"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
+
+	"github.com/admiralyeoj/anime-announcements/internal/commands"
+	"github.com/admiralyeoj/anime-announcements/internal/config"
+	"go.uber.org/zap"
 )
 
-// cliName is the name used in the repl prompts
-const cliName string = "Anime Announcements"
-
-func startRepl() {
+func startRepl(log *zap.SugaredLogger, cfg *config.Config, db *sql.DB) {
 	reader := bufio.NewScanner(os.Stdin)
+
+	repos, err := config.InitializeRepositories(db)
+	if err != nil {
+		log.Fatal("Error initializing repositories", zap.Error(err))
+	}
+
+	cmds := []commands.Command{
+		commands.NewHelpCommand(nil),
+		commands.ImportScheduledAnimeCommand,
+		// Other commands can be added here
+	}
+
+	cmds[0] = commands.NewHelpCommand(cmds)
+
+	// Create a channel to listen for OS interrupts
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		<-signalChan
+		fmt.Println("\nExiting gracefully...")
+		os.Exit(0) // Exit without error
+	}()
+
 	for {
-		fmt.Print(cliName + " > ")
+		fmt.Print(cfg.Name + " > ")
 		reader.Scan()
 
-		words := cleanInput(reader.Text())
-		if len(words) == 0 {
+		args := cleanInput(reader.Text())
+		if len(args) == 0 {
 			continue
 		}
 
-		commandName := words[0]
+		// Parse command line arguments
+		commandName := args[0]
 
-		command, exists := GetCommands()[commandName]
-		if exists {
-			if command.Callback != nil {
-				err := command.Callback()
+		commandFound := false
+		for _, cmd := range cmds {
+			if cmd.Name == commandName {
+				err = cmd.Handler(repos, args[1:]) // Call the handler for the command
+
 				if err != nil {
-					fmt.Println(err)
-				}
-			} else if command.CallbackArgs != nil {
-				args := []string{}
-				if len(words) > 1 {
-					args = words[1:]
+					log.Fatal(err.Error(), zap.Error(err))
 				}
 
-				err := command.CallbackArgs(args...)
-				if err != nil {
-					fmt.Println(err)
-				}
+				commandFound = true
+				break
 			}
-
-			continue
-		} else {
-			fmt.Println(commandName, ": command not found")
-			continue
 		}
+
+		if commandFound {
+			continue // Restart the loop after successfully executing a command
+		}
+
+		if commandName == "exit" {
+			return
+		}
+
+		fmt.Printf("Unknown command: %s\n", commandName)
+
 	}
 }
 

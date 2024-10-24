@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"sync"
-
 	aniListModel "github.com/admiralyeoj/anime-announcements/internal/aniListApi/model"
 	"github.com/machinebox/graphql"
 )
@@ -17,18 +15,10 @@ type aniListRepository struct {
 	graphqlClient *graphql.Client
 }
 
-// Use a pointer for the static instance
-var instance *aniListRepository
-var once sync.Once
-
 // NewAniListRepository creates and returns a new instance of aniListRepository
-func NewAniListRepository() AniListRepository {
-	once.Do(func() {
-		client := graphql.NewClient("https://graphql.anilist.co")
-		instance = &aniListRepository{
-			graphqlClient: client,
-		}
-	})
-
-	return instance
+func NewAniListRepositories() AniListRepository {
+	client := graphql.NewClient("https://graphql.anilist.co")
+	return &aniListRepository{
+		graphqlClient: client,
+	}
 }
