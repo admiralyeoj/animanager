@@ -32,7 +32,6 @@ func InitializeCommands(srvs *service.Services) *cobra.Command {
 
 	// Register each command
 	for _, command := range commands {
-
 		rootCmd.AddCommand(command.Command())
 	}
 
