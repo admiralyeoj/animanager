@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/admiralyeoj/anime-announcements/config"
 	"github.com/admiralyeoj/anime-announcements/internal/command"
+	"github.com/admiralyeoj/anime-announcements/internal/config"
 	"github.com/admiralyeoj/anime-announcements/internal/repository"
 	"github.com/admiralyeoj/anime-announcements/internal/service"
 )
