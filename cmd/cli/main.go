@@ -35,5 +35,5 @@ func main() {
 
 	// fmt.Println("Connected to database")
 
-	startRepl(logger.Logger, cfg, db)
+	startRepl(cfg, db)
 }

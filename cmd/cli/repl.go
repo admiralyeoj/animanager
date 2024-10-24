@@ -11,10 +11,9 @@ import (
 	"github.com/admiralyeoj/anime-announcements/internal/command"
 	"github.com/admiralyeoj/anime-announcements/internal/repository"
 	"github.com/admiralyeoj/anime-announcements/internal/service"
-	"go.uber.org/zap"
 )
 
-func startRepl(log *zap.SugaredLogger, cfg *config.Config, db *sql.DB) {
+func startRepl(cfg *config.Config, db *sql.DB) {
 
 	// Create a root command to serve as the entry point
 	rootCmd := command.InitializeCommands(service.InitializeServices(repository.InitializeRepositories(db), db))
