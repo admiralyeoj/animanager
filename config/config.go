@@ -1,7 +1,6 @@
 package config
 
 import (
-	"database/sql"
 	"flag"
 	"os"
 
@@ -19,14 +18,14 @@ type Config struct {
 	SMTP    SMTPConfig
 }
 
+func NewConfig() *Config {
+	return &Config{}
+}
+
 type Repositories struct {
 	AniListRepo   aniListRepo.AniListRepository
 	DatabaseRepos *dbRepo.DatabaseRepositories
 	// Add other repositories here
-}
-
-func NewConfig() *Config {
-	return &Config{}
 }
 
 // ParseFlags parses the environment variables and flags into the Config struct.
@@ -55,18 +54,4 @@ func (cfg *Config) ParseFlags() error {
 
 	flag.Parse()
 	return nil
-}
-
-// func (c *Config) InitializeHandlers(r *repositories.Repositories) *handlers.Handlers {
-// 	return handlers.NewHandlers(r.UserRepository)
-// }
-
-func InitializeRepositories(db *sql.DB) (*Repositories, error) {
-	aniRepo := aniListRepo.NewAniListRepositories()
-	dbRepo := dbRepo.NewDatabaseRepositories(db)
-	return &Repositories{
-		AniListRepo:   aniRepo,
-		DatabaseRepos: dbRepo,
-		// Add other repositories here
-	}, nil
 }

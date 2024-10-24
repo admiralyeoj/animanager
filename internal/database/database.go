@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/admiralyeoj/anime-announcements/internal/config"
+	"github.com/admiralyeoj/anime-announcements/config"
 	_ "github.com/lib/pq"
 )
 

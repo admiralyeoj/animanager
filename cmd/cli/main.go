@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/admiralyeoj/anime-announcements/internal/config"
+	"github.com/admiralyeoj/anime-announcements/config"
 	"github.com/admiralyeoj/anime-announcements/internal/database"
 	"github.com/admiralyeoj/anime-announcements/internal/logger"
 	"github.com/joho/godotenv"
