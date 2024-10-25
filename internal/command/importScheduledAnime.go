@@ -27,7 +27,7 @@ func (c *ImportScheduledAnimeCommand) Name() string {
 // Command returns the cobra.Command for the command
 func (c *ImportScheduledAnimeCommand) Command() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "import-anime [start-date] [end-date]",
+		Use:   "import-scheduled",
 		Short: "Import the upcoming anime",
 		Run: func(cmd *cobra.Command, args []string) {
 			// Fetching flags using cmd.Flags()
@@ -44,8 +44,8 @@ func (c *ImportScheduledAnimeCommand) Command() *cobra.Command {
 	format := "01/02/2006"
 	currentTime.Format(format)
 
-	cmd.Flags().String("start", "", "Start date for importing anime")
-	cmd.Flags().String("end", "", "End date for importing anime")
+	cmd.Flags().String("start", "", "Start date for importing anime. Default to current date.")
+	cmd.Flags().String("end", "", "End date for importing anime. Default to the day after the start date.")
 
 	return cmd
 }
