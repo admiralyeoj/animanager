@@ -5,7 +5,9 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/admiralyeoj/anime-announcements/internal/command"
 	"github.com/admiralyeoj/anime-announcements/internal/config"
@@ -17,6 +19,16 @@ func startRepl(cfg *config.Config, db *sql.DB) {
 
 	// Create a root command to serve as the entry point
 	rootCmd := command.InitializeCommands(service.InitializeServices(repository.InitializeRepositories(db), db))
+
+	// Create a channel to listen for OS interrupts
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		<-signalChan
+		fmt.Println("\nExiting gracefully...")
+		os.Exit(0) // Exit without error
+	}()
 
 	reader := bufio.NewReader(os.Stdin)
 	for {

@@ -23,11 +23,26 @@ func NewMediaRepository(db *sql.DB) MediaRepository {
 }
 
 func (med *mediaRepository) Create(media *model.Media) error {
-	query := "INSERT INTO media (external_id, site_url, type_id, format_id, duration, episodes, cover_img, banner_img) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id"
-	err := med.db.QueryRow(query, media.ExternalId, media.SiteUrl, 1, 1, media.Duration, media.Episodes, media.CoverImage, media.BannerImage).Scan(&media.Id)
+	query := `
+		INSERT INTO media 
+		(external_id, site_url, type, format, duration, episodes, cover_img, banner_img) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+		RETURNING id
+	`
+
+	err := med.db.QueryRow(query,
+		media.ExternalId,
+		media.SiteUrl,
+		media.Type,
+		media.Format,
+		media.Duration,
+		media.Episodes,
+		media.CoverImage.Large,
+		media.BannerImage).Scan(&media.Id)
 
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

@@ -7,7 +7,7 @@ import (
 
 // DatabaseRepositories holds instances of different repositories
 type DatabaseRepositories struct {
-	media MediaRepository
+	Media MediaRepository
 }
 
 // Use a pointer for the static instance
@@ -21,7 +21,7 @@ func NewDatabaseRepositories(db *sql.DB) *DatabaseRepositories {
 		mediaRepo := NewMediaRepository(db)
 
 		instance = &DatabaseRepositories{
-			media: mediaRepo, // This now matches the MediaRepository type
+			Media: mediaRepo, // This now matches the MediaRepository type
 			// Initialize other repositories here as needed
 		}
 	})

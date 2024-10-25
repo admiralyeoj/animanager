@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS external_link_types;

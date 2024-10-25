@@ -22,11 +22,13 @@ func (repo *aniListRepository) GetUpcomingAnime(startDate, endDate string) (aniL
 					episode
 					timeUntilAiring
 					media {
+						id
 						siteUrl
 						type
 						format
 						duration
 						episodes
+						bannerImage
 						title {
 							english
 						}

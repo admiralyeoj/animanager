@@ -1,7 +1,8 @@
 package model
 
 type AiringSchedules []struct {
-	ID              int   `json:"id"`
+	Id              int   `json:"-"`
+	ExternalId      int   `json:"id"`
 	AiringAt        int   `json:"airingAt"`
 	Episode         int   `json:"episode"`
 	TimeUntilAiring int   `json:"timeUntilAiring"`
