@@ -1,6 +1,7 @@
 package command
 
 import (
+	"github.com/admiralyeoj/anime-announcements/internal/repository"
 	"github.com/admiralyeoj/anime-announcements/internal/service"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +18,7 @@ type Command struct {
 }
 
 // InitializeCommands sets up all commands and injects repositories into them
-func InitializeCommands(srvs *service.Services) *cobra.Command {
+func InitializeCommands(repos *repository.Repositories, srvs *service.Services) *cobra.Command {
 	// Create the root command
 	rootCmd := &cobra.Command{
 		Use:   "anime-cli",
@@ -27,6 +28,7 @@ func InitializeCommands(srvs *service.Services) *cobra.Command {
 	// Define all commands implementing CommandInterface
 	commands := []CommandInterface{
 		NewImportScheduledAnimeCommand(&srvs.AniListSrv),
+		NewTestCommand(&repos.BlueSkyRepo),
 		// Add other commands implementing CommandInterface here
 	}
 

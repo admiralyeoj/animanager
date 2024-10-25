@@ -18,7 +18,9 @@ import (
 func startRepl(cfg *config.Config, db *gorm.DB) {
 
 	// Create a root command to serve as the entry point
-	rootCmd := command.InitializeCommands(service.InitializeServices(repository.InitializeRepositories(db), db))
+	repos := repository.InitializeRepositories(db)
+	srvs := service.InitializeServices(repos, db)
+	rootCmd := command.InitializeCommands(repos, srvs)
 
 	// Create a channel to listen for OS interrupts
 	signalChan := make(chan os.Signal, 1)
