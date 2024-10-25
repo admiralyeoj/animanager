@@ -1,10 +1,9 @@
 package service
 
 import (
-	"database/sql"
-
 	"github.com/admiralyeoj/anime-announcements/internal/aniListApi/service"
 	"github.com/admiralyeoj/anime-announcements/internal/repository"
+	"gorm.io/gorm"
 )
 
 type Services struct {
@@ -12,7 +11,7 @@ type Services struct {
 	// Add other repositories here
 }
 
-func InitializeServices(repos *repository.Repositories, db *sql.DB) *Services {
+func InitializeServices(repos *repository.Repositories, db *gorm.DB) *Services {
 	return &Services{
 		AniListSrv: service.NewAniListService(*repos.DatabaseRepos),
 		// Add other repositories here

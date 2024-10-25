@@ -31,7 +31,7 @@ func main() {
 		logger.Logger.Fatal("Failed to connect to the database", zap.Error(err))
 		panic(err)
 	}
-	defer db.Close()
+	defer database.Close(db)
 
 	// fmt.Println("Connected to database")
 

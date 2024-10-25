@@ -1,10 +1,9 @@
 package repository
 
 import (
-	"database/sql"
-
 	aniListRepo "github.com/admiralyeoj/anime-announcements/internal/aniListApi/repository"
 	dbRepos "github.com/admiralyeoj/anime-announcements/internal/database/repository"
+	"gorm.io/gorm"
 )
 
 type Repositories struct {
@@ -13,7 +12,7 @@ type Repositories struct {
 	// Add other repositories here
 }
 
-func InitializeRepositories(db *sql.DB) *Repositories {
+func InitializeRepositories(db *gorm.DB) *Repositories {
 	return &Repositories{
 		AniListRepo:   aniListRepo.NewAniListRepositories(),
 		DatabaseRepos: dbRepos.NewDatabaseRepositories(db),

@@ -11,8 +11,3 @@ CREATE TABLE media (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TRIGGER set_updated_timestamp_media
-BEFORE UPDATE ON media
-FOR EACH ROW
-EXECUTE FUNCTION update_timestamp();

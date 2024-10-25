@@ -1,9 +1,8 @@
 package repository
 
 import (
-	"database/sql"
-
 	"github.com/admiralyeoj/anime-announcements/internal/aniListApi/model"
+	"gorm.io/gorm"
 )
 
 type MediaRepository interface {
@@ -13,35 +12,18 @@ type MediaRepository interface {
 
 // mediaRepository is a concrete implementation of MediaRepository
 type mediaRepository struct {
-	db *sql.DB
+	db *gorm.DB
 }
 
-func NewMediaRepository(db *sql.DB) MediaRepository {
+func NewMediaRepository(db *gorm.DB) MediaRepository {
 	return &mediaRepository{
 		db: db,
 	}
 }
 
-func (med *mediaRepository) Create(media *model.Media) error {
-	query := `
-		INSERT INTO media 
-		(external_id, site_url, type, format, duration, episodes, cover_img, banner_img) 
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
-		RETURNING id
-	`
-
-	err := med.db.QueryRow(query,
-		media.ExternalId,
-		media.SiteUrl,
-		media.Type,
-		media.Format,
-		media.Duration,
-		media.Episodes,
-		media.CoverImage.Large,
-		media.BannerImage).Scan(&media.Id)
-
-	if err != nil {
-		return err
+func (mediaRepo *mediaRepository) Create(media *model.Media) error {
+	if err := mediaRepo.db.Create(&media).Error; err != nil {
+		return err // Return any error encountered during insertion
 	}
 
 	return nil

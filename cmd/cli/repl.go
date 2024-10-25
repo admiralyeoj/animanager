@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"database/sql"
 	"fmt"
 	"os"
 	"os/signal"
@@ -13,9 +12,10 @@ import (
 	"github.com/admiralyeoj/anime-announcements/internal/config"
 	"github.com/admiralyeoj/anime-announcements/internal/repository"
 	"github.com/admiralyeoj/anime-announcements/internal/service"
+	"gorm.io/gorm"
 )
 
-func startRepl(cfg *config.Config, db *sql.DB) {
+func startRepl(cfg *config.Config, db *gorm.DB) {
 
 	// Create a root command to serve as the entry point
 	rootCmd := command.InitializeCommands(service.InitializeServices(repository.InitializeRepositories(db), db))

@@ -24,8 +24,23 @@ func (srv *aniListService) ImportUpcomingAnime(startDate, endDate string) error 
 			fmt.Println(err.Error())
 		}
 
+		err = srv.dbRepositories.AiringSchedule.Create(media.ID, &anime)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		err = srv.dbRepositories.MediaTitle.Create(media.ID, &media.Title)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
+		err = srv.dbRepositories.ExternalLinks.Create(media.ID, &media.ExternalLinks)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
 		for _, link := range media.ExternalLinks {
-			fmt.Println(link.Site + " " + link.Url)
+			fmt.Println(link.Name + " " + link.Url)
 		}
 	}
 

@@ -1,13 +1,17 @@
 package repository
 
 import (
-	"database/sql"
 	"sync"
+
+	"gorm.io/gorm"
 )
 
 // DatabaseRepositories holds instances of different repositories
 type DatabaseRepositories struct {
-	Media MediaRepository
+	Media          MediaRepository
+	AiringSchedule AiringScheduleRepository
+	MediaTitle     MediaTitleRepository
+	ExternalLinks  ExternalLinksRepository
 }
 
 // Use a pointer for the static instance
@@ -15,13 +19,15 @@ var instance *DatabaseRepositories
 var once sync.Once
 
 // NewDatabaseRepositories creates and returns a new instance of DatabaseRepositories
-func NewDatabaseRepositories(db *sql.DB) *DatabaseRepositories {
+func NewDatabaseRepositories(db *gorm.DB) *DatabaseRepositories {
 	once.Do(func() {
 		// Initialize the repositories
-		mediaRepo := NewMediaRepository(db)
 
 		instance = &DatabaseRepositories{
-			Media: mediaRepo, // This now matches the MediaRepository type
+			Media:          NewMediaRepository(db),
+			AiringSchedule: NewAiringScheduleRepository(db),
+			MediaTitle:     NewMediaTitleRepository(db),
+			ExternalLinks:  NewExternalLinksRepository(db),
 			// Initialize other repositories here as needed
 		}
 	})

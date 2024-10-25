@@ -36,9 +36,11 @@ func (repo *aniListRepository) GetUpcomingAnime(startDate, endDate string) (aniL
 							large
 						}
 						externalLinks {
+							siteId
 							site
 							url
 							type
+							language
 						}
 					}
 				

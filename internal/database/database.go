@@ -1,45 +1,31 @@
 package database
 
 import (
-	"context"
-	"database/sql"
+	"log"
 	"sync"
-	"time"
 
 	"github.com/admiralyeoj/anime-announcements/internal/config"
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var (
-	dbInstance *sql.DB
+	dbInstance *gorm.DB
 	once       sync.Once
 )
 
 // Connect initializes the database connection if not already created, otherwise returns the existing one.
-func Connect(cfg *config.Config) (*sql.DB, error) {
+func Connect(cfg *config.Config) (*gorm.DB, error) {
 	var err error
 
 	// Use sync.Once to ensure the connection is only initialized once
 	once.Do(func() {
-		dbInstance, err = sql.Open("postgres", cfg.DB.DSN)
+		dsn := cfg.DB.DSN // Your DSN should be defined in your config
+		dbInstance, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err != nil {
+			log.Fatalf("failed to connect to database: %v", err)
 			return
 		}
-
-		dbInstance.SetMaxOpenConns(cfg.DB.MaxOpenConns)
-		dbInstance.SetMaxIdleConns(cfg.DB.MaxIdleConns)
-
-		duration, err := time.ParseDuration(cfg.DB.MaxIdleTime)
-		if err != nil {
-			return
-		}
-
-		dbInstance.SetConnMaxIdleTime(duration)
-
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-
-		err = dbInstance.PingContext(ctx)
 	})
 
 	// If an error occurred during initialization, return the error
@@ -49,4 +35,17 @@ func Connect(cfg *config.Config) (*sql.DB, error) {
 
 	// Return the singleton instance
 	return dbInstance, nil
+}
+
+// Close closes the database connection
+func Close(db *gorm.DB) {
+	sqlDB, err := db.DB() // Retrieve the underlying *sql.DB instance
+	if err != nil {
+		log.Fatalf("failed to get DB from GORM: %v", err)
+	}
+
+	// Close the database connection
+	if err := sqlDB.Close(); err != nil {
+		log.Fatalf("failed to close the database connection: %v", err)
+	}
 }

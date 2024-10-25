@@ -2,6 +2,6 @@ package model
 
 type UpcomingAnime struct {
 	Page struct {
-		AiringSchedules AiringSchedules `json:"airingSchedules"`
+		AiringSchedules []AiringSchedule `json:"airingSchedules"`
 	} `json:"Page"`
 }
