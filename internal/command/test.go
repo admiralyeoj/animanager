@@ -20,7 +20,7 @@ func NewTestCommand(repo *repository.BlueSkyRepository) *TestCommand {
 
 // Name returns the name of the command
 func (c *TestCommand) Name() string {
-	return "import-anime"
+	return "test"
 }
 
 // Command returns the cobra.Command for the command
@@ -39,7 +39,11 @@ func (c *TestCommand) Command() *cobra.Command {
 // ImportScheduledAnimeHandler handles the scheduled anime import.
 func (c *TestCommand) Handler(repo *repository.BlueSkyRepository) error {
 
-	err := (*repo).CreateRecord("Hello World")
+	images := &[]string{
+		"https://s4.anilist.co/file/anilistcdn/media/anime/banner/164172-ceuofxXerReI.jpg",
+	}
+
+	_, err := (*repo).CreateRecord("Hello World", images)
 
 	if err != nil {
 		fmt.Println(err.Error())

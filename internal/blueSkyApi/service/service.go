@@ -3,26 +3,29 @@ package service
 import (
 	"sync"
 
+	bSkyRepo "github.com/admiralyeoj/anime-announcements/internal/blueSkyApi/repository"
 	dbRepo "github.com/admiralyeoj/anime-announcements/internal/database/repository"
 )
 
-// AniListService defines the interface for AniList service actions
-type AniListService interface {
+// BlueSkyService defines the interface for Bluesky service actions
+type BlueSkyService interface {
 	// functions go here
 }
 
-// aniListService is a concrete implementation of AniListService
-type aniListService struct {
+// blueSkyService is a concrete implementation of BlueSkyService
+type blueSkyService struct {
+	bSkyRepository bSkyRepo.BlueSkyRepository
 	dbRepositories dbRepo.DatabaseRepositories
 }
 
 // Use a pointer for the static instance
-var instance *aniListService
+var instance *blueSkyService
 var once sync.Once
 
-// NewAniListService returns the singleton instance of aniListService
-func NewAniListService(dbRepo dbRepo.DatabaseRepositories) AniListService {
-	return &aniListService{
+// NewBlueSkyService returns the singleton instance of blueSkyService
+func NewBlueSkyService(dbRepo dbRepo.DatabaseRepositories, bskyRepo bSkyRepo.BlueSkyRepository) BlueSkyService {
+	return &blueSkyService{
 		dbRepositories: dbRepo,
+		bSkyRepository: bskyRepo,
 	}
 }

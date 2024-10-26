@@ -2,9 +2,11 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/admiralyeoj/anime-announcements/internal/logger"
 	"github.com/bluesky-social/indigo/api/atproto"
@@ -16,7 +18,7 @@ import (
 
 // BlueSkyRepository defines the interface for BlySky repository actions
 type BlueSkyRepository interface {
-	CreateRecord(text string, images *[]string) error
+	CreateRecord(text string, images *[]string) (*string, error)
 }
 
 // blueSkyRepository is a concrete implementation of BlueSkyRepository
@@ -65,7 +67,7 @@ func NewBlueSkyRepositories() BlueSkyRepository {
 	}
 }
 
-func (repo blueSkyRepository) CreateRecord(text string, images *[]string) error {
+func (repo blueSkyRepository) CreateRecord(text string, images *[]string) (*string, error) {
 
 	post := bsky.FeedPost{
 		Text:      text,
@@ -80,8 +82,6 @@ func (repo blueSkyRepository) CreateRecord(text string, images *[]string) error 
 		}
 	}
 
-	// createPostEmbed(),
-
 	ctx := context.Background()
 	input := &atproto.RepoCreateRecord_Input{
 		Repo:       repo.Session.Handle,
@@ -90,9 +90,11 @@ func (repo blueSkyRepository) CreateRecord(text string, images *[]string) error 
 	}
 
 	response, err := atproto.RepoCreateRecord(ctx, repo.Client, input)
-	fmt.Printf("Record created successfully: %+v\n", response)
+	if err != nil {
+		return nil, errors.New("no segment found")
+	}
 
-	return err
+	return extractSegment(response.Uri)
 }
 
 // createImageEmbeds downloads images, uploads them as blobs, and creates embedded images for a post.
@@ -133,4 +135,16 @@ func createImageEmbeds(client *xrpc.Client, images *[]string) []*bsky.EmbedImage
 	}
 
 	return embedImages // Return the slice of embedded images
+}
+
+func extractSegment(input string) (*string, error) {
+	// Find the last index of the '/' character
+	lastSlashIndex := strings.LastIndex(input, "/")
+	if lastSlashIndex == -1 {
+		return nil, errors.New("no segment found")
+	}
+
+	// Extract the substring after the last '/' character
+	lastSegment := input[lastSlashIndex+1:]
+	return &lastSegment, nil
 }
