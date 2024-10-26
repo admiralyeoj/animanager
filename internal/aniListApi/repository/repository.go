@@ -1,7 +1,7 @@
 package repository
 
 import (
-	aniListModel "github.com/admiralyeoj/anime-announcements/internal/aniListApi/model"
+	aniListModel "github.com/admiralyeoj/anime-announcements/internal/database/model"
 	"github.com/machinebox/graphql"
 )
 

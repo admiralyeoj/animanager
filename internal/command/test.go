@@ -38,7 +38,6 @@ func (c *TestCommand) Command() *cobra.Command {
 
 // ImportScheduledAnimeHandler handles the scheduled anime import.
 func (c *TestCommand) Handler(repo *repository.BlueSkyRepository) error {
-
 	images := &[]string{
 		"https://s4.anilist.co/file/anilistcdn/media/anime/banner/164172-ceuofxXerReI.jpg",
 	}

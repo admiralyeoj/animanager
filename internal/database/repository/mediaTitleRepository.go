@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/admiralyeoj/anime-announcements/internal/aniListApi/model"
+	"github.com/admiralyeoj/anime-announcements/internal/database/model"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
