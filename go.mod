@@ -1,4 +1,4 @@
-module github.com/admiralyeoj/anime-announcements
+module github.com/admiralyeoj/animanager
 
 go 1.22.5
 

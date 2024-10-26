@@ -1,8 +1,8 @@
 package command
 
 import (
-	"github.com/admiralyeoj/anime-announcements/internal/repository"
-	"github.com/admiralyeoj/anime-announcements/internal/service"
+	"github.com/admiralyeoj/animanager/internal/repository"
+	"github.com/admiralyeoj/animanager/internal/service"
 	"github.com/spf13/cobra"
 )
 

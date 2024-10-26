@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	aniListModel "github.com/admiralyeoj/anime-announcements/internal/database/model"
-	"github.com/admiralyeoj/anime-announcements/util"
+	aniListModel "github.com/admiralyeoj/animanager/internal/database/model"
+	"github.com/admiralyeoj/animanager/util"
 	"github.com/machinebox/graphql"
 )
 

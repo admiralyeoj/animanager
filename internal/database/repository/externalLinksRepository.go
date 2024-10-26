@@ -3,7 +3,7 @@ package repository
 import (
 	"errors"
 
-	"github.com/admiralyeoj/anime-announcements/internal/database/model"
+	"github.com/admiralyeoj/animanager/internal/database/model"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

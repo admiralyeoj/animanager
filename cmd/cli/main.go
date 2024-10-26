@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/admiralyeoj/anime-announcements/internal/config"
-	"github.com/admiralyeoj/anime-announcements/internal/database"
-	"github.com/admiralyeoj/anime-announcements/internal/logger"
+	"github.com/admiralyeoj/animanager/internal/config"
+	"github.com/admiralyeoj/animanager/internal/database"
+	"github.com/admiralyeoj/animanager/internal/logger"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"

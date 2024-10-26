@@ -8,10 +8,10 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/admiralyeoj/anime-announcements/internal/command"
-	"github.com/admiralyeoj/anime-announcements/internal/config"
-	"github.com/admiralyeoj/anime-announcements/internal/repository"
-	"github.com/admiralyeoj/anime-announcements/internal/service"
+	"github.com/admiralyeoj/animanager/internal/command"
+	"github.com/admiralyeoj/animanager/internal/config"
+	"github.com/admiralyeoj/animanager/internal/repository"
+	"github.com/admiralyeoj/animanager/internal/service"
 	"gorm.io/gorm"
 )
 

@@ -3,8 +3,8 @@ package service
 import (
 	"sync"
 
-	bSkyRepo "github.com/admiralyeoj/anime-announcements/internal/blueSky/repository"
-	dbRepo "github.com/admiralyeoj/anime-announcements/internal/database/repository"
+	bSkyRepo "github.com/admiralyeoj/animanager/internal/blueSky/repository"
+	dbRepo "github.com/admiralyeoj/animanager/internal/database/repository"
 )
 
 // BlueSkyService defines the interface for Bluesky service actions

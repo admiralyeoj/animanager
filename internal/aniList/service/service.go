@@ -3,8 +3,8 @@ package service
 import (
 	"sync"
 
-	aniRepo "github.com/admiralyeoj/anime-announcements/internal/aniList/repository"
-	dbRepo "github.com/admiralyeoj/anime-announcements/internal/database/repository"
+	aniRepo "github.com/admiralyeoj/animanager/internal/aniList/repository"
+	dbRepo "github.com/admiralyeoj/animanager/internal/database/repository"
 )
 
 // AniListService defines the interface for AniList service actions

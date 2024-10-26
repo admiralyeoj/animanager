@@ -1,1 +1,1 @@
-# anime-announcements
+# animanager

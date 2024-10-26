@@ -4,7 +4,7 @@ import (
 	"log"
 	"sync"
 
-	"github.com/admiralyeoj/anime-announcements/internal/config"
+	"github.com/admiralyeoj/animanager/internal/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

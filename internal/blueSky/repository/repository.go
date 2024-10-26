@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/admiralyeoj/anime-announcements/internal/logger"
+	"github.com/admiralyeoj/animanager/internal/logger"
 	"github.com/bluesky-social/indigo/api/atproto"
 	"github.com/bluesky-social/indigo/api/bsky"
 	"github.com/bluesky-social/indigo/atproto/syntax"

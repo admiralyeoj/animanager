@@ -4,8 +4,8 @@ import (
 	"flag"
 	"os"
 
-	aniListRepo "github.com/admiralyeoj/anime-announcements/internal/aniList/repository"
-	dbRepo "github.com/admiralyeoj/anime-announcements/internal/database/repository"
+	aniListRepo "github.com/admiralyeoj/animanager/internal/aniList/repository"
+	dbRepo "github.com/admiralyeoj/animanager/internal/database/repository"
 )
 
 // Config holds all the configuration settings for the application.
