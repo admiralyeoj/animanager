@@ -3,7 +3,7 @@ package service
 import (
 	"sync"
 
-	bSkyRepo "github.com/admiralyeoj/anime-announcements/internal/blueSkyApi/repository"
+	bSkyRepo "github.com/admiralyeoj/anime-announcements/internal/blueSky/repository"
 	dbRepo "github.com/admiralyeoj/anime-announcements/internal/database/repository"
 )
 
