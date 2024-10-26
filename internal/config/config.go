@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 
-	aniListRepo "github.com/admiralyeoj/anime-announcements/internal/aniListApi/repository"
+	aniListRepo "github.com/admiralyeoj/anime-announcements/internal/aniList/repository"
 	dbRepo "github.com/admiralyeoj/anime-announcements/internal/database/repository"
 )
 

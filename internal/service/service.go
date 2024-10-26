@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/admiralyeoj/anime-announcements/internal/aniListApi/service"
+	"github.com/admiralyeoj/anime-announcements/internal/aniList/service"
 	"github.com/admiralyeoj/anime-announcements/internal/repository"
 	"gorm.io/gorm"
 )

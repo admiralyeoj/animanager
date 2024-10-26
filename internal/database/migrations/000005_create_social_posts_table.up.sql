@@ -1,6 +1,6 @@
 CREATE TABLE social_posts (
     id SERIAL PRIMARY KEY,  -- Auto-incrementing primary key
-    post_key text NOT NULL UNIQUE, -- Corresponds anilist id
+    post_id text NOT NULL UNIQUE, -- Corresponds anilist id
     airing_schedule_id BIGINT NOT NULL,
 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert

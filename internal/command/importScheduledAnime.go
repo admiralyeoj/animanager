@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/admiralyeoj/anime-announcements/internal/aniListApi/service"
+	"github.com/admiralyeoj/anime-announcements/internal/aniList/service"
 	"github.com/spf13/cobra"
 )
 

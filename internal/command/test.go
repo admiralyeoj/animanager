@@ -3,7 +3,7 @@ package command
 import (
 	"fmt"
 
-	"github.com/admiralyeoj/anime-announcements/internal/blueSkyApi/repository"
+	"github.com/admiralyeoj/anime-announcements/internal/blueSky/repository"
 	"github.com/spf13/cobra"
 )
 

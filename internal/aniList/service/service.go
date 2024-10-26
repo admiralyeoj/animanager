@@ -3,7 +3,7 @@ package service
 import (
 	"sync"
 
-	aniRepo "github.com/admiralyeoj/anime-announcements/internal/aniListApi/repository"
+	aniRepo "github.com/admiralyeoj/anime-announcements/internal/aniList/repository"
 	dbRepo "github.com/admiralyeoj/anime-announcements/internal/database/repository"
 )
 

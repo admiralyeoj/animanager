@@ -1,8 +1,8 @@
 package repository
 
 import (
-	aniListRepo "github.com/admiralyeoj/anime-announcements/internal/aniListApi/repository"
-	blueSkyRepo "github.com/admiralyeoj/anime-announcements/internal/blueSkyApi/repository"
+	aniListRepo "github.com/admiralyeoj/anime-announcements/internal/aniList/repository"
+	blueSkyRepo "github.com/admiralyeoj/anime-announcements/internal/blueSky/repository"
 	dbRepos "github.com/admiralyeoj/anime-announcements/internal/database/repository"
 	"gorm.io/gorm"
 )
