@@ -12,6 +12,7 @@ type DatabaseRepositories struct {
 	AiringSchedule AiringScheduleRepository
 	MediaTitle     MediaTitleRepository
 	ExternalLinks  ExternalLinksRepository
+	SocialPost     SocialPostRepository
 }
 
 // Use a pointer for the static instance
@@ -28,6 +29,7 @@ func NewDatabaseRepositories(db *gorm.DB) *DatabaseRepositories {
 			AiringSchedule: NewAiringScheduleRepository(db),
 			MediaTitle:     NewMediaTitleRepository(db),
 			ExternalLinks:  NewExternalLinksRepository(db),
+			SocialPost:     NewSocialPostRepository(db),
 			// Initialize other repositories here as needed
 		}
 	})

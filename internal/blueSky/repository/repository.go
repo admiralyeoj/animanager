@@ -61,7 +61,7 @@ func NewBlueSkyRepositories() BlueSkyRepository {
 	}
 	client.Auth = auth
 
-	return &blueSkyRepository{
+	return blueSkyRepository{
 		Client:  client,
 		Session: session,
 	}

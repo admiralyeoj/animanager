@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS social_posts;
+DROP TABLE IF EXISTS social_post;

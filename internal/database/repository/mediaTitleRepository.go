@@ -24,7 +24,7 @@ func NewMediaTitleRepository(db *gorm.DB) MediaTitleRepository {
 }
 
 func (titleRepo *mediaTitleRepository) Create(mediaId uint, title *model.MediaTitle) error {
-	title.MediaId = mediaId
+	title.MediaID = mediaId
 
 	if err := titleRepo.db.Create(&title).Error; err != nil {
 		return err // Return any error encountered during insertion
@@ -34,15 +34,15 @@ func (titleRepo *mediaTitleRepository) Create(mediaId uint, title *model.MediaTi
 }
 
 func (titleRepo *mediaTitleRepository) UpdateOrCreate(mediaId uint, title *model.MediaTitle) error {
-	title.MediaId = mediaId
+	title.MediaID = mediaId
 
-	tx := titleRepo.db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "media_id"}},           // Unique key to handle conflicts
-		DoUpdates: clause.AssignmentColumns([]string{"english"}), // Fields to update
-	}).Create(&title)
+	err := titleRepo.db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "media_id"}},
+		DoUpdates: clause.AssignmentColumns([]string{"english", "updated_at"}), // Update the fields you want
+	}).Create(&title).Error
 
-	if tx.Error != nil {
-		return tx.Error
+	if err != nil {
+		return err
 	}
 
 	return nil

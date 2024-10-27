@@ -1,4 +1,4 @@
-CREATE TABLE social_posts (
+CREATE TABLE social_post (
     id SERIAL PRIMARY KEY,  -- Auto-incrementing primary key
     post_id text NOT NULL UNIQUE, -- Corresponds anilist id
     airing_schedule_id BIGINT NOT NULL,

@@ -1,20 +1,27 @@
 package command
 
 import (
+	"encoding/json"
 	"fmt"
 
-	"github.com/admiralyeoj/animanager/internal/blueSky/repository"
+	bSkyRepo "github.com/admiralyeoj/animanager/internal/blueSky/repository"
+	bSkySrv "github.com/admiralyeoj/animanager/internal/blueSky/service"
+	dbRepos "github.com/admiralyeoj/animanager/internal/database/repository"
 	"github.com/spf13/cobra"
 )
 
 // TestCommand struct implements CommandInterface
 type TestCommand struct {
-	blueskyRepo *repository.BlueSkyRepository
+	dbRepo      *dbRepos.DatabaseRepositories
+	blueskyRepo *bSkyRepo.BlueSkyRepository
+	blueskySrv  *bSkySrv.BlueSkyService
 }
 
-func NewTestCommand(repo *repository.BlueSkyRepository) *TestCommand {
+func NewTestCommand(dbRepos dbRepos.DatabaseRepositories, repo *bSkyRepo.BlueSkyRepository, srv *bSkySrv.BlueSkyService) *TestCommand {
 	return &TestCommand{
+		dbRepo:      &dbRepos,
 		blueskyRepo: repo,
+		blueskySrv:  srv,
 	}
 }
 
@@ -29,7 +36,7 @@ func (c *TestCommand) Command() *cobra.Command {
 		Use:   "test",
 		Short: "Testing Command",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := c.Handler(c.blueskyRepo); err != nil {
+			if err := c.Handler(c.dbRepo, c.blueskyRepo, c.blueskySrv); err != nil {
 				fmt.Println(err.Error())
 			}
 		},
@@ -37,7 +44,14 @@ func (c *TestCommand) Command() *cobra.Command {
 }
 
 // ImportScheduledAnimeHandler handles the scheduled anime import.
-func (c *TestCommand) Handler(repo *repository.BlueSkyRepository) error {
+func (c *TestCommand) Handler(dbRepo *dbRepos.DatabaseRepositories, repo *bSkyRepo.BlueSkyRepository, srv *bSkySrv.BlueSkyService) error {
+	results, _ := dbRepo.AiringSchedule.GetNextNotAnnounced()
+
+	jsonObject, _ := json.Marshal(results)
+
+	fmt.Println(string(jsonObject))
+
+	return nil
 	images := &[]string{
 		"https://s4.anilist.co/file/anilistcdn/media/anime/banner/164172-ceuofxXerReI.jpg",
 	}

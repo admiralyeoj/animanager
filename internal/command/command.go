@@ -28,7 +28,7 @@ func InitializeCommands(repos *repository.Repositories, srvs *service.Services) 
 	// Define all commands implementing CommandInterface
 	commands := []CommandInterface{
 		NewImportScheduledAnimeCommand(&srvs.AniListSrv),
-		NewTestCommand(&repos.BlueSkyRepo),
+		NewTestCommand(*repos.DatabaseRepos, &repos.BlueSkyRepo, &srvs.BlueSkySrv),
 		// Add other commands implementing CommandInterface here
 	}
 

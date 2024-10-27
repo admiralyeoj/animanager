@@ -10,6 +10,7 @@ type AiringScheduleRepository interface {
 	// Define your methods here
 	Create(mediaId uint, schedules *model.AiringSchedule) error
 	UpdateOrCreate(mediaId uint, schedule *model.AiringSchedule) error
+	GetNextNotAnnounced() (*model.AiringSchedule, error)
 }
 
 // mediaRepository is a concrete implementation of MediaRepository
@@ -36,14 +37,33 @@ func (airing *airingScheduleRepository) Create(mediaId uint, schedule *model.Air
 func (airing *airingScheduleRepository) UpdateOrCreate(mediaId uint, schedule *model.AiringSchedule) error {
 	schedule.MediaId = mediaId
 
-	tx := airing.db.Clauses(clause.OnConflict{
+	err := airing.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "external_id"}},                                 // Unique key to handle conflicts
 		DoUpdates: clause.AssignmentColumns([]string{"airing_at", "episode", "media_id"}), // Fields to update
-	}).Create(&schedule)
+	}).Omit("Media").Create(&schedule).Error
 
-	if tx.Error != nil {
-		return tx.Error
+	if err != nil {
+		return err
 	}
 
 	return nil
+}
+
+func (airing *airingScheduleRepository) GetNextNotAnnounced() (*model.AiringSchedule, error) {
+
+	var result *model.AiringSchedule
+
+	// Fetch AiringSchedule records without a corresponding SocialPost by airing_schedule_id
+	err := airing.db.
+		Not("id IN (?)", airing.db.Model(model.SocialPost{}).Select("airing_schedule_id")).
+		Preload("Media.Title").
+		Preload("Media.ExternalLinks").
+		Order("airing_at ASC").
+		First(&result).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
