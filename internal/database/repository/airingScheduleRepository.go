@@ -1,6 +1,10 @@
 package repository
 
 import (
+	"errors"
+	"fmt"
+	"time"
+
 	"github.com/admiralyeoj/animanager/internal/database/model"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -38,8 +42,8 @@ func (airing *airingScheduleRepository) UpdateOrCreate(mediaId uint, schedule *m
 	schedule.MediaId = mediaId
 
 	err := airing.db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "external_id"}},                                 // Unique key to handle conflicts
-		DoUpdates: clause.AssignmentColumns([]string{"airing_at", "episode", "media_id"}), // Fields to update
+		Columns:   []clause.Column{{Name: "external_id"}},                                               // Unique key to handle conflicts
+		DoUpdates: clause.AssignmentColumns([]string{"airing_at", "episode", "media_id", "updated_at"}), // Fields to update
 	}).Omit("Media").Create(&schedule).Error
 
 	if err != nil {
@@ -53,15 +57,22 @@ func (airing *airingScheduleRepository) GetNextNotAnnounced() (*model.AiringSche
 
 	var result *model.AiringSchedule
 
+	now := time.Now()
+	midnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location()).Unix()
+
 	// Fetch AiringSchedule records without a corresponding SocialPost by airing_schedule_id
 	err := airing.db.
 		Not("id IN (?)", airing.db.Model(model.SocialPost{}).Select("airing_schedule_id")).
+		Where("airing_at > ?", midnight).
 		Preload("Media.Title").
 		Preload("Media.ExternalLinks").
 		Order("airing_at ASC").
 		First(&result).Error
 
-	if err != nil {
+	fmt.Println(err.Error())
+
+	// Only return an error if it's not ErrRecordNotFound
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 

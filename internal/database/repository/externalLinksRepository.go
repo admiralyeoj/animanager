@@ -47,8 +47,8 @@ func (linksRepo *externalLinksRepository) UpdateOrCreate(mediaId uint, links *[]
 	}
 
 	err := linksRepo.db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "external_id"}},                                                       // Define unique columns to check for conflicts
-		DoUpdates: clause.AssignmentColumns([]string{"name", "url", "type", "language", "site_id", "media_id"}), // Fields to update on conflict
+		Columns:   []clause.Column{{Name: "external_id"}},                                                                     // Define unique columns to check for conflicts
+		DoUpdates: clause.AssignmentColumns([]string{"name", "url", "type", "language", "site_id", "media_id", "updated_at"}), // Fields to update on conflict
 	}).Create(&links).Error
 
 	if err != nil {

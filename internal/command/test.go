@@ -1,7 +1,6 @@
 package command
 
 import (
-	"encoding/json"
 	"fmt"
 
 	bSkyRepo "github.com/admiralyeoj/animanager/internal/blueSky/repository"
@@ -45,22 +44,12 @@ func (c *TestCommand) Command() *cobra.Command {
 
 // ImportScheduledAnimeHandler handles the scheduled anime import.
 func (c *TestCommand) Handler(dbRepo *dbRepos.DatabaseRepositories, repo *bSkyRepo.BlueSkyRepository, srv *bSkySrv.BlueSkyService) error {
-	results, _ := dbRepo.AiringSchedule.GetNextNotAnnounced()
 
-	jsonObject, _ := json.Marshal(results)
-
-	fmt.Println(string(jsonObject))
-
-	return nil
-	images := &[]string{
-		"https://s4.anilist.co/file/anilistcdn/media/anime/banner/164172-ceuofxXerReI.jpg",
-	}
-
-	_, err := (*repo).CreateRecord("Hello World", images)
-
-	if err != nil {
+	if err := (*srv).AnnounceAiringAnime(); err != nil {
 		fmt.Println(err.Error())
 	}
+
+	fmt.Println("Done")
 
 	return nil
 }

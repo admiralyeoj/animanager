@@ -9,7 +9,7 @@ import (
 
 // BlueSkyService defines the interface for Bluesky service actions
 type BlueSkyService interface {
-	// functions go here
+	AnnounceAiringAnime() error
 }
 
 // blueSkyService is a concrete implementation of BlueSkyService

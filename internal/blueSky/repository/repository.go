@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/admiralyeoj/animanager/internal/logger"
@@ -18,7 +19,7 @@ import (
 
 // BlueSkyRepository defines the interface for BlySky repository actions
 type BlueSkyRepository interface {
-	CreateRecord(text string, images *[]string) (*string, error)
+	CreateRecord(text *string, images *[]string) (*string, error)
 }
 
 // blueSkyRepository is a concrete implementation of BlueSkyRepository
@@ -67,18 +68,47 @@ func NewBlueSkyRepositories() BlueSkyRepository {
 	}
 }
 
-func (repo blueSkyRepository) CreateRecord(text string, images *[]string) (*string, error) {
+func (repo blueSkyRepository) CreateRecord(text *string, images *[]string) (*string, error) {
+
+	var linksTo []LinkInfo
+	text, linksTo = extractLinks(*text)
+
+	var facets []*bsky.RichtextFacet
+	if len(linksTo) > 0 {
+		for _, link := range linksTo {
+			facet := &bsky.RichtextFacet{
+				Features: []*bsky.RichtextFacet_Features_Elem{
+					{
+						RichtextFacet_Link: &bsky.RichtextFacet_Link{
+							Uri: link.URL,
+						},
+					},
+				},
+				Index: &bsky.RichtextFacet_ByteSlice{
+					ByteStart: int64(link.Indices[0]),
+					ByteEnd:   int64(link.Indices[1]),
+				},
+			}
+
+			facets = append(facets, facet)
+		}
+	}
 
 	post := bsky.FeedPost{
-		Text:      text,
+		Text:      *text,
 		CreatedAt: syntax.DatetimeNow().String(),
+		Facets:    facets,
 	}
 
 	if images != nil {
-		post.Embed = &bsky.FeedPost_Embed{
-			EmbedImages: &bsky.EmbedImages{
-				Images: createImageEmbeds(repo.Client, images),
-			},
+		embeds := createImageEmbeds(repo.Client, images)
+
+		if len(embeds) > 0 {
+			post.Embed = &bsky.FeedPost_Embed{
+				EmbedImages: &bsky.EmbedImages{
+					Images: embeds,
+				},
+			}
 		}
 	}
 
@@ -91,7 +121,7 @@ func (repo blueSkyRepository) CreateRecord(text string, images *[]string) (*stri
 
 	response, err := atproto.RepoCreateRecord(ctx, repo.Client, input)
 	if err != nil {
-		return nil, errors.New("no segment found")
+		return nil, err
 	}
 
 	return extractSegment(response.Uri)
@@ -135,6 +165,58 @@ func createImageEmbeds(client *xrpc.Client, images *[]string) []*bsky.EmbedImage
 	}
 
 	return embedImages // Return the slice of embedded images
+}
+
+type LinkInfo struct {
+	URL     string
+	Indices [2]int // Start and end indices of the filtered text
+}
+
+// extractLinks processes the input string to remove <a> tags while extracting the URL and keeping the text.
+func extractLinks(input string) (*string, []LinkInfo) {
+	// Define a regex pattern to find <a href='...'>...</a>
+	pattern := `<a[^>]*href=['"]([^'"]+)['"][^>]*>(.*?)<\/a>`
+	re := regexp.MustCompile(pattern)
+
+	// Create a slice to hold the LinkInfo structs
+	var links []LinkInfo
+
+	// Track cumulative offset adjustment as we remove <a> tags
+	offset := 0
+
+	// Iterate over all matches
+	for _, match := range re.FindAllStringSubmatchIndex(input, -1) {
+		// Ensure match has expected submatches to avoid slice out-of-range errors
+		if len(match) < 6 {
+			continue
+		}
+
+		startTagIndex := match[0] - offset  // Start index of <a> adjusted by offset
+		endTagIndex := match[1] - offset    // End index of </a> adjusted by offset
+		urlStartIndex := match[2] - offset  // Start index of the URL adjusted by offset
+		urlEndIndex := match[3] - offset    // End index of the URL adjusted by offset
+		textStartIndex := match[4] - offset // Start index of the text adjusted by offset
+		textEndIndex := match[5] - offset   // End index of the text adjusted by offset
+
+		// Calculate positions relative to the cleaned text
+		newStartIndex := startTagIndex
+		textLength := textEndIndex - textStartIndex
+		newEndIndex := newStartIndex + textLength
+
+		// Append the URL and new indices to the slice
+		links = append(links, LinkInfo{
+			URL:     input[urlStartIndex:urlEndIndex], // Extract the URL
+			Indices: [2]int{newStartIndex, newEndIndex},
+		})
+
+		// Remove the <a>...</a> tags from the input string while keeping the text in between
+		input = input[:newStartIndex] + input[textStartIndex:textEndIndex] + input[endTagIndex:]
+
+		// Update the cumulative offset based on the difference in length after tag removal
+		offset += (endTagIndex - startTagIndex) - textLength
+	}
+
+	return &input, links
 }
 
 func extractSegment(input string) (*string, error) {

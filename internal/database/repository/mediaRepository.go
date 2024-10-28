@@ -34,16 +34,8 @@ func (mediaRepo *mediaRepository) Create(media *model.Media) error {
 func (mediaRepo *mediaRepository) UpdateOrCreate(media *model.Media) error {
 	// Step 1: Upsert for the parent (Media)
 	err := mediaRepo.db.Clauses(clause.OnConflict{
-		Columns: []clause.Column{{Name: "external_id"}}, // Unique key to handle conflicts
-		DoUpdates: clause.Assignments(map[string]interface{}{
-			"site_url":   media.SiteUrl,
-			"type":       media.Type,
-			"format":     media.Format,
-			"duration":   media.Duration,
-			"episodes":   media.Episodes,
-			"cover_img":  media.CoverImage.Large,
-			"banner_img": media.BannerImage,
-		}),
+		Columns:   []clause.Column{{Name: "external_id"}}, // Unique key to handle conflicts
+		DoUpdates: clause.AssignmentColumns([]string{"site_url", "type", "format", "duration", "episodes", "cover_img", "banner_img", "updated_at"}),
 	}).Omit("Title", "ExternalLinks").Create(&media).Error
 
 	if err != nil {
