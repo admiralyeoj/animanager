@@ -8,6 +8,7 @@ import (
 type SchedulerRepository interface {
 	// Define your methods here
 	GetAll() ([]model.Scheduler, error)
+	Update(schedule model.Scheduler) error
 }
 
 // schedulerRepository is a concrete implementation of SchedulerRepository
@@ -29,4 +30,8 @@ func (schedulerRepo *schedulerRepository) GetAll() ([]model.Scheduler, error) {
 	}
 
 	return jobs, nil
+}
+
+func (schedulerRepo *schedulerRepository) Update(schedule model.Scheduler) error {
+	return schedulerRepo.db.Model(&schedule).Updates(schedule).Error
 }

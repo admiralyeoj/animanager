@@ -23,3 +23,16 @@ type Scheduler struct {
 func (Scheduler) TableName() string {
 	return "scheduler" // Make sure GORM uses the correct table name
 }
+
+/* https://pkg.go.dev/github.com/robfig/cron@v1.2.0#section-readme
++------------------+------------+--------------------------+-------------------------------+
+| Field Name       | Mandatory? | Allowed Values           | Allowed Special Characters    |
++------------------+------------+--------------------------+-------------------------------+
+| Seconds          | Yes        | 0-59                     | * / , -                       |
+| Minutes          | Yes        | 0-59                     | * / , -                       |
+| Hours            | Yes        | 0-23                     | * / , -                       |
+| Day of Month     | Yes        | 1-31                     | * / , - ?                     |
+| Month            | Yes        | 1-12 or JAN-DEC          | * / , -                       |
+| Day of Week      | Yes        | 0-6 or SUN-SAT           | * / , - ?                     |
++------------------+------------+--------------------------+-------------------------------+
+*/

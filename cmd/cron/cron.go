@@ -4,9 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
+	"strings"
+	"time"
 
 	"github.com/admiralyeoj/animanager/internal/config"
-	"github.com/admiralyeoj/animanager/internal/repository"
+	"github.com/admiralyeoj/animanager/internal/database/model"
+	dbRepos "github.com/admiralyeoj/animanager/internal/database/repository"
+	aniRepo "github.com/admiralyeoj/animanager/internal/repository"
 	"github.com/robfig/cron"
 	"gorm.io/gorm"
 )
@@ -14,7 +19,7 @@ import (
 func StartCron(cfg *config.Config, db *gorm.DB) {
 
 	// Create a root command to serve as the entry point
-	repos := repository.InitializeRepositories(cfg, db)
+	repos := aniRepo.InitializeRepositories(cfg, db)
 	// srvs := service.InitializeServices(repos, db)
 
 	// Load jobs from the scheduler table
@@ -48,10 +53,7 @@ func StartCron(cfg *config.Config, db *gorm.DB) {
 			continue
 		}
 
-		fmt.Println(job.JobName)
-
 		// Add the job to the cron scheduler
-		fmt.Println(job.CronExpression)
 		err := c.AddFunc(job.CronExpression, func() {
 
 			var params map[string]interface{}
@@ -63,6 +65,8 @@ func StartCron(cfg *config.Config, db *gorm.DB) {
 			}
 
 			jobFunc(params)
+			// Update last_ran and next_run after job execution
+			updateJobStatus(*repos.DatabaseRepos, job)
 			fmt.Printf("Executed job: %s\n", job.JobName)
 		})
 
@@ -77,6 +81,34 @@ func StartCron(cfg *config.Config, db *gorm.DB) {
 
 	// Keep the application running
 	select {}
+}
+
+// Function to update last_ran and next_run
+func updateJobStatus(dbRepo dbRepos.DatabaseRepositories, job model.Scheduler) {
+
+	// Parse the cron expression
+	// Join the last five fields for standard parsing (minute, hour, day of month, month, day of week)
+	fields := strings.Fields(job.CronExpression)
+	standardExpression := strings.Join(fields[1:], " ")
+	schedule, err := cron.ParseStandard(standardExpression)
+	if err != nil {
+		log.Printf("Error parsing cron expression %s: %v\n", job.CronExpression, err)
+		os.Exit(1)
+	}
+
+	now := time.Now()
+
+	// Calculate next_run based on cron expression (example logic)
+	nextRun := schedule.Next(time.Now()) // Adjust this based on your cron logic
+
+	// Create an instance of the Scheduler model
+	job.LastRun = &now
+	job.NextRun = &nextRun
+
+	// Update the job status in the database
+	if err := dbRepo.Scheduler.Update(job); err != nil {
+		log.Printf("Error updating job status for job ID %d: %v\n", job.ID, err)
+	}
 }
 
 func backupDatabase(params map[string]interface{}) {
