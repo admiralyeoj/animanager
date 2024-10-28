@@ -2,7 +2,6 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/admiralyeoj/animanager/internal/database/model"
@@ -64,12 +63,11 @@ func (airing *airingScheduleRepository) GetNextNotAnnounced() (*model.AiringSche
 	err := airing.db.
 		Not("id IN (?)", airing.db.Model(model.SocialPost{}).Select("airing_schedule_id")).
 		Where("airing_at > ?", midnight).
+		Where("airing_at < ?", now.Unix()).
 		Preload("Media.Title").
 		Preload("Media.ExternalLinks").
 		Order("airing_at ASC").
 		First(&result).Error
-
-	fmt.Println(err.Error())
 
 	// Only return an error if it's not ErrRecordNotFound
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {

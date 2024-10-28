@@ -54,7 +54,7 @@ func (cfg *Config) ParseFlags() error {
 	flag.StringVar(&cfg.SMTP.Sender, "smtp-sender", "openMovie <no-reply@test.user.net>", "SMTP sender")
 
 	// Bluesky configurations
-	flag.StringVar(&cfg.BlueSky.Host, "bluesky-host", os.Getenv("BLUESKY_Host"), "Bluesky Host")
+	flag.StringVar(&cfg.BlueSky.Host, "bluesky-host", os.Getenv("BLUESKY_HOST"), "Bluesky Host")
 	flag.StringVar(&cfg.BlueSky.Handle, "bluesky-handle", os.Getenv("BLUESKY_HANDLE"), "Bluesky Handle")
 	flag.StringVar(&cfg.BlueSky.AppPassword, "bluesky-app-password", os.Getenv("BLUESKY_APP_PASSWORD"), "Bluesky App Password")
 
