@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"bufio"
@@ -15,7 +15,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func startRepl(cfg *config.Config, db *gorm.DB) {
+func StartCli(cfg *config.Config, db *gorm.DB) {
 
 	// Create a root command to serve as the entry point
 	repos := repository.InitializeRepositories(cfg, db)

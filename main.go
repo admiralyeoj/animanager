@@ -1,6 +1,12 @@
 package main
 
 import (
+	"flag"
+	"fmt"
+	"os"
+
+	"github.com/admiralyeoj/animanager/cmd/cli"
+	"github.com/admiralyeoj/animanager/cmd/cron"
 	"github.com/admiralyeoj/animanager/internal/config"
 	"github.com/admiralyeoj/animanager/internal/database"
 	"github.com/admiralyeoj/animanager/internal/logger"
@@ -10,6 +16,10 @@ import (
 )
 
 func main() {
+	// Define a flag to set the mode (cli or cron)
+	mode := flag.String("mode", "cli", "Application mode: 'cli' for command line or 'cron' for cron job")
+	flag.Parse()
+
 	logger.InitLogger()
 	defer logger.CloseLogger()
 
@@ -33,7 +43,14 @@ func main() {
 	}
 	defer database.Close(db)
 
-	// fmt.Println("Connected to database")
+	switch *mode {
+	case "cli":
+		cli.StartCli(cfg, db)
+	case "cron":
+		cron.StartCron(cfg, db)
+	default:
+		fmt.Println("Invalid mode. Please choose 'cli' or 'cron'")
+		os.Exit(1)
+	}
 
-	startRepl(cfg, db)
 }

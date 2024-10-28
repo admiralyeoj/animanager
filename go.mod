@@ -9,6 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/machinebox/graphql v0.2.2
+	github.com/robfig/cron v1.2.0
 	github.com/spf13/cobra v1.8.1
 	go.uber.org/zap v1.27.0
 	gorm.io/driver/postgres v1.5.9
