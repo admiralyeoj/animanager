@@ -18,7 +18,7 @@ import (
 func startRepl(cfg *config.Config, db *gorm.DB) {
 
 	// Create a root command to serve as the entry point
-	repos := repository.InitializeRepositories(db)
+	repos := repository.InitializeRepositories(cfg, db)
 	srvs := service.InitializeServices(repos, db)
 	rootCmd := command.InitializeCommands(repos, srvs)
 

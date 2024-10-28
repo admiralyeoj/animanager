@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/admiralyeoj/animanager/internal/config"
 	"github.com/admiralyeoj/animanager/internal/logger"
 	"github.com/bluesky-social/indigo/api/atproto"
 	"github.com/bluesky-social/indigo/api/bsky"
@@ -29,12 +30,12 @@ type blueSkyRepository struct {
 }
 
 // NewAniListRepository creates and returns a new instance of aniListRepository
-func NewBlueSkyRepositories() BlueSkyRepository {
-	blueskyHandle := os.Getenv("BLUESKY_HANDLE")
-	blueskyPass := os.Getenv("BLUESKY_APP_PASSWORD")
+func NewBlueSkyRepositories(cfg *config.Config) BlueSkyRepository {
+	blueskyHandle := cfg.BlueSky.Handle
+	blueskyPass := cfg.BlueSky.AppPassword
 
 	client := &xrpc.Client{
-		Host: "https://bsky.social",
+		Host: cfg.BlueSky.Host,
 	}
 
 	ctx := context.Background()
