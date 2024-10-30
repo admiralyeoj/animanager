@@ -14,4 +14,5 @@ CREATE TABLE scheduler (
 
 INSERT INTO scheduler (job_name, cron_expression, function_name, is_active, params, created_at, updated_at)
 VALUES 
-    ('Test Cron Job', '0 */1 * * * *', 'test', true, NULL, NOW(), NOW());
+    ('Test Cron Job', '0 */1 * * * *', 'test', true, NULL, NOW(), NOW()),
+    ('Import Scheduled Anime', '0 */2 * * * *', 'importScheduledAnime', true, NULL, NOW(), NOW());

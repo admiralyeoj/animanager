@@ -10,17 +10,18 @@ import (
 
 	"github.com/admiralyeoj/animanager/internal/database/model"
 	"github.com/admiralyeoj/animanager/internal/repository"
+	"github.com/admiralyeoj/animanager/internal/service"
 	"github.com/robfig/cron"
 )
 
 type CronJobInterface interface {
 	GetCronExpression() string
 	SetCronExpression(string)
-	Handler(repos *repository.Repositories, params map[string]interface{}) error
+	Handler(srvs *service.Services, repos *repository.Repositories, params map[string]interface{}) error
 }
 
 // InitializeCronJobs loads jobs from the database and sets up the cron scheduler
-func InitializeCronJobs(repos *repository.Repositories) *cron.Cron {
+func InitializeCronJobs(srvs *service.Services, repos *repository.Repositories) *cron.Cron {
 	// Initialize cron scheduler
 	c := cron.New()
 
@@ -32,7 +33,8 @@ func InitializeCronJobs(repos *repository.Repositories) *cron.Cron {
 
 	// Create a mapping of job types to constructors
 	jobMap := map[string]func() CronJobInterface{
-		"test": func() CronJobInterface { return NewTestCronJob() },
+		"test":                 func() CronJobInterface { return NewTestCronJob() },
+		"importScheduledAnime": func() CronJobInterface { return NewImportScheduledAnimeCronJob() },
 	}
 
 	// Convert database jobs to CronJob structs and register with cron
@@ -60,7 +62,7 @@ func InitializeCronJobs(repos *repository.Repositories) *cron.Cron {
 		// Schedule the job based on the cron expression from the database
 		err := c.AddFunc(cronJob.GetCronExpression(), func() {
 			// Execute the job handler and update LastRun
-			err := cronJob.Handler(repos, params)
+			err := cronJob.Handler(srvs, repos, params)
 			if err != nil {
 				log.Printf("Error executing job %s: %v", activeJob.JobName, err.Error())
 			}
