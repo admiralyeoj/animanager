@@ -60,12 +60,17 @@ To configure the application, you need to set up environment variables in a `.en
    Open the `.env` file in a text editor and configure the following variables according to your setup:
 
    ```dotenv
+    APP_NAME="AniManager"
+    APP_PORT=8888
+    APP_ENV=local
+
    # PostgreSQL Database Configuration
    DB_USER=your_username        # Your PostgreSQL username
    DB_PASSWORD=your_password    # Your PostgreSQL password
    DB_HOST=localhost             # Database host (usually localhost)
    DB_PORT=5432                  # Default PostgreSQL port
    DB_NAME=your_database_name    # Name of your database
+   DB_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
 
    # Bluesky
    # add your bluesky handle and app password from your account
