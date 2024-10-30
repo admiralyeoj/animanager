@@ -23,9 +23,9 @@ var instance *blueSkyService
 var once sync.Once
 
 // NewBlueSkyService returns the singleton instance of blueSkyService
-func NewBlueSkyService(dbRepo dbRepo.DatabaseRepositories, bskyRepo bSkyRepo.BlueSkyRepository) BlueSkyService {
+func NewBlueSkyService(dbRepo *dbRepo.DatabaseRepositories, bskyRepo bSkyRepo.BlueSkyRepository) BlueSkyService {
 	return &blueSkyService{
-		dbRepositories: dbRepo,
+		dbRepositories: *dbRepo,
 		bSkyRepository: bskyRepo,
 	}
 }

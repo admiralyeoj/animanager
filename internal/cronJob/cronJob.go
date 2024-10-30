@@ -35,6 +35,7 @@ func InitializeCronJobs(srvs *service.Services, repos *repository.Repositories) 
 	jobMap := map[string]func() CronJobInterface{
 		"test":                 func() CronJobInterface { return NewTestCronJob() },
 		"importScheduledAnime": func() CronJobInterface { return NewImportScheduledAnimeCronJob(&srvs.AniListSrv) },
+		"announceNewAnime":     func() CronJobInterface { return NewAnnounceNewAnimeCronJob(&srvs.BlueSkySrv) },
 	}
 
 	// Convert database jobs to CronJob structs and register with cron

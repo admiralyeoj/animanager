@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	dbRepos "github.com/admiralyeoj/animanager/internal/database/repository"
+	blueSkySrv "github.com/admiralyeoj/animanager/internal/blueSky/service"
 )
 
 // AnnounceNewAnimeCronJob struct implements CronJobInterface
@@ -13,14 +13,14 @@ type AnnounceNewAnimeCronJob struct {
 	Expression   string
 	LastRun      *time.Time
 	NextRun      *time.Time
-	dbRepo       *dbRepos.DatabaseRepositories
+	blueSkySrv   *blueSkySrv.BlueSkyService
 }
 
 // NewAnnounceNewAnimeCronJob creates a new AnnounceNewAnimeCronJob instance
-func NewAnnounceNewAnimeCronJob(dbRepo *dbRepos.DatabaseRepositories) *AnnounceNewAnimeCronJob {
+func NewAnnounceNewAnimeCronJob(blueSkySrv *blueSkySrv.BlueSkyService) *AnnounceNewAnimeCronJob {
 	return &AnnounceNewAnimeCronJob{
 		FunctionName: "testCommand",
-		dbRepo:       dbRepo,
+		blueSkySrv:   blueSkySrv,
 	}
 }
 
@@ -34,8 +34,10 @@ func (j *AnnounceNewAnimeCronJob) GetCronExpression() string {
 }
 
 // Handler executes the job logic
-func (j *AnnounceNewAnimeCronJob) Handler(params map[string]interface{}) error {
-	fmt.Println("Running Test Job")
+func (j *AnnounceNewAnimeCronJob) Handler(params map[string]interface{}, args ...interface{}) error {
+	if err := (*j.blueSkySrv).AnnounceAiringAnime(); err != nil {
+		fmt.Println(err.Error())
+	}
 
 	return nil
 }

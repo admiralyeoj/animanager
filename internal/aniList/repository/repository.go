@@ -15,10 +15,9 @@ type aniListRepository struct {
 	graphqlClient *graphql.Client
 }
 
-// NewAniListRepository creates and returns a new instance of aniListRepository
 func NewAniListRepositories() AniListRepository {
 	client := graphql.NewClient("https://graphql.anilist.co")
-	return &aniListRepository{
+	return &aniListRepository{ // Return a pointer to aniListRepository
 		graphqlClient: client,
 	}
 }

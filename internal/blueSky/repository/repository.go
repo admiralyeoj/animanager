@@ -29,7 +29,7 @@ type blueSkyRepository struct {
 	Session *atproto.ServerCreateSession_Output
 }
 
-// NewAniListRepository creates and returns a new instance of aniListRepository
+// NewBlueSkyRepositories creates and returns a new instance of aniListRepository
 func NewBlueSkyRepositories(cfg *config.Config) BlueSkyRepository {
 	blueskyHandle := cfg.BlueSky.Handle
 	blueskyPass := cfg.BlueSky.AppPassword

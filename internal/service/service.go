@@ -15,8 +15,8 @@ type Services struct {
 
 func InitializeServices(repos *repository.Repositories, db *gorm.DB) *Services {
 	return &Services{
-		AniListSrv: aniList.NewAniListService(*repos.DatabaseRepos),
-		BlueSkySrv: bluesky.NewBlueSkyService(*repos.DatabaseRepos, repos.BlueSkyRepo),
+		AniListSrv: aniList.NewAniListService(repos.DatabaseRepos),
+		BlueSkySrv: bluesky.NewBlueSkyService(repos.DatabaseRepos, repos.BlueSkyRepo),
 		// Add other repositories here
 	}
 }
