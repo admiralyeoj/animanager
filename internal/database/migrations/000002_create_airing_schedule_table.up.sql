@@ -4,7 +4,8 @@ CREATE TABLE airing_schedule (
     airing_at BIGINT NOT NULL,         -- Corresponds to AiringAt
     episode INT NOT NULL,           -- Corresponds to Episode
     media_id BIGINT NOT NULL,          -- Foreign key to the media table
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
+    deleted_at TIMESTAMPTZ,
     FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE -- Define foreign key constraint
 );

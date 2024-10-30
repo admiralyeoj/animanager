@@ -7,7 +7,7 @@ import (
 
 type SchedulerRepository interface {
 	// Define your methods here
-	GetAll() ([]model.Scheduler, error)
+	GetActiveJobs() ([]model.Scheduler, error)
 	Update(schedule model.Scheduler) error
 }
 
@@ -22,7 +22,7 @@ func NewSchedulerRepository(db *gorm.DB) SchedulerRepository {
 	}
 }
 
-func (schedulerRepo *schedulerRepository) GetAll() ([]model.Scheduler, error) {
+func (schedulerRepo *schedulerRepository) GetActiveJobs() ([]model.Scheduler, error) {
 	var jobs []model.Scheduler
 	// Fetch active jobs using GORM's `Where` and `Find` methods
 	if err := schedulerRepo.db.Where("is_active = ?", true).Find(&jobs).Error; err != nil {

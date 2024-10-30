@@ -7,7 +7,8 @@ CREATE TABLE external_link (
     type VARCHAR(100) NOT NULL, -- external link type
     language VARCHAR(50), -- Language of the link (nullable)
     media_id BIGINT NOT NULL,                            
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,  -- Automatically set to current time on insert
+    deleted_at TIMESTAMPTZ,
     FOREIGN KEY (media_id) REFERENCES media(id) ON DELETE CASCADE -- Define foreign key constraint
 );

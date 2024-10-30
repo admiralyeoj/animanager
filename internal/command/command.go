@@ -11,12 +11,6 @@ type CommandInterface interface {
 	Command() *cobra.Command // Returns the actual cobra.Command
 }
 
-type Command struct {
-	Name        string
-	Description string
-	Handler     func(srvs *service.Services, args []string) error
-}
-
 // InitializeCommands sets up all commands and injects repositories into them
 func InitializeCommands(repos *repository.Repositories, srvs *service.Services) *cobra.Command {
 	// Create the root command

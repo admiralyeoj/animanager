@@ -8,6 +8,7 @@ CREATE TABLE media (
     episodes INT,                                  -- Number of episodes (if applicable)
     cover_img TEXT,                                -- Cover image URL
     banner_img TEXT,                               -- Banner image URL
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,-- Automatically set to current time on insert
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Automatically set to current time on update
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,-- Automatically set to current time on insert
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP, -- Automatically set to current time on update
+    deleted_at TIMESTAMPTZ -- Automatically set to current time on update
 );
