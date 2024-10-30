@@ -20,7 +20,6 @@ type ImportScheduledAnimeCronJob struct {
 func NewImportScheduledAnimeCronJob() *ImportScheduledAnimeCronJob {
 	return &ImportScheduledAnimeCronJob{
 		FunctionName: "importScheduledAnime",
-		Expression:   "*/2 * * * *", // every 2 minutes
 	}
 }
 

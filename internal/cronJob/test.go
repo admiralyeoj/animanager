@@ -20,7 +20,6 @@ type TestCronJob struct {
 func NewTestCronJob() *TestCronJob {
 	return &TestCronJob{
 		FunctionName: "testCommand",
-		Expression:   "*/2 * * * *", // every 2 minutes
 	}
 }
 
