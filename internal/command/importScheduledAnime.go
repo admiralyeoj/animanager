@@ -1,6 +1,7 @@
 package command
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -34,7 +35,7 @@ func (c *ImportScheduledAnimeCommand) Command() *cobra.Command {
 			startDate, _ := cmd.Flags().GetString("start")
 			endDate, _ := cmd.Flags().GetString("end")
 
-			if err := c.Handler(c.aniSrv, startDate, endDate); err != nil {
+			if err := c.Handler(startDate, endDate); err != nil {
 				fmt.Println(err.Error())
 			}
 		},
@@ -51,20 +52,37 @@ func (c *ImportScheduledAnimeCommand) Command() *cobra.Command {
 }
 
 // ImportScheduledAnimeHandler handles the scheduled anime import.
-func (c *ImportScheduledAnimeCommand) Handler(srv *service.AniListService, startDate, endDate string) error {
+func (c *ImportScheduledAnimeCommand) Handler(args ...interface{}) error {
 
+	var startDate, endDate string
 	format := "01/02/2006"
 
-	if startDate == "" {
+	// Check if the start date argument is set
+	if len(args) > 0 {
+		var ok bool
+		startDate, ok = args[0].(string)
+		// Check if the first argument is a string
+		if !ok {
+			return errors.New("Start date set but is not a string.")
+		}
+	} else {
 		startDate = time.Now().Format(format)
 	}
 
-	if endDate == "" {
+	// Check if the first argument is set
+	if len(args) > 1 {
+		var ok bool
+		endDate, ok = args[1].(string)
+
+		if !ok {
+			return errors.New("End date set but is not a string.")
+		}
+	} else {
 		date, _ := time.Parse(format, startDate)
 		endDate = date.AddDate(0, 0, 1).Format(format)
 	}
 
-	err := (*srv).ImportUpcomingAnime(startDate, endDate)
+	err := (*c.aniSrv).ImportUpcomingAnime(startDate, endDate)
 	if err != nil {
 		return fmt.Errorf("error importing anime: %w", err)
 	}

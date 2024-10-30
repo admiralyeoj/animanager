@@ -17,7 +17,7 @@ import (
 type CronJobInterface interface {
 	GetCronExpression() string
 	SetCronExpression(string)
-	Handler(srvs *service.Services, repos *repository.Repositories, params map[string]interface{}) error
+	Handler(params map[string]interface{}, args ...interface{}) error
 }
 
 // InitializeCronJobs loads jobs from the database and sets up the cron scheduler
@@ -34,7 +34,7 @@ func InitializeCronJobs(srvs *service.Services, repos *repository.Repositories) 
 	// Create a mapping of job types to constructors
 	jobMap := map[string]func() CronJobInterface{
 		"test":                 func() CronJobInterface { return NewTestCronJob() },
-		"importScheduledAnime": func() CronJobInterface { return NewImportScheduledAnimeCronJob() },
+		"importScheduledAnime": func() CronJobInterface { return NewImportScheduledAnimeCronJob(&srvs.AniListSrv) },
 	}
 
 	// Convert database jobs to CronJob structs and register with cron
@@ -62,7 +62,7 @@ func InitializeCronJobs(srvs *service.Services, repos *repository.Repositories) 
 		// Schedule the job based on the cron expression from the database
 		err := c.AddFunc(cronJob.GetCronExpression(), func() {
 			// Execute the job handler and update LastRun
-			err := cronJob.Handler(srvs, repos, params)
+			err := cronJob.Handler(params)
 			if err != nil {
 				log.Printf("Error executing job %s: %v", activeJob.JobName, err.Error())
 			}

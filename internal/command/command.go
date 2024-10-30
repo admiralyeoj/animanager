@@ -9,6 +9,7 @@ import (
 type CommandInterface interface {
 	Name() string            // Returns the command name
 	Command() *cobra.Command // Returns the actual cobra.Command
+	Handler(args ...interface{}) error
 }
 
 // InitializeCommands sets up all commands and injects repositories into them

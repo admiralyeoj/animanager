@@ -3,9 +3,6 @@ package cronJob
 import (
 	"fmt"
 	"time"
-
-	"github.com/admiralyeoj/animanager/internal/repository"
-	"github.com/admiralyeoj/animanager/internal/service"
 )
 
 // TestCronJob struct implements CronJobInterface
@@ -33,7 +30,7 @@ func (j *TestCronJob) GetCronExpression() string {
 }
 
 // Handler executes the job logic
-func (j *TestCronJob) Handler(srvs *service.Services, repos *repository.Repositories, params map[string]interface{}) error {
+func (j *TestCronJob) Handler(params map[string]interface{}, args ...interface{}) error {
 	fmt.Println("Running Test Job")
 
 	return nil

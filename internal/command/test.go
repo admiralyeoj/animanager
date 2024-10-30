@@ -35,7 +35,7 @@ func (c *TestCommand) Command() *cobra.Command {
 		Use:   "test",
 		Short: "Testing Command",
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := c.Handler(c.dbRepo, c.blueskyRepo, c.blueskySrv); err != nil {
+			if err := c.Handler(); err != nil {
 				fmt.Println(err.Error())
 			}
 		},
@@ -43,9 +43,9 @@ func (c *TestCommand) Command() *cobra.Command {
 }
 
 // ImportScheduledAnimeHandler handles the scheduled anime import.
-func (c *TestCommand) Handler(dbRepo *dbRepos.DatabaseRepositories, repo *bSkyRepo.BlueSkyRepository, srv *bSkySrv.BlueSkyService) error {
+func (c *TestCommand) Handler(args ...interface{}) error {
 
-	if err := (*srv).AnnounceAiringAnime(); err != nil {
+	if err := (*c.blueskySrv).AnnounceAiringAnime(); err != nil {
 		fmt.Println(err.Error())
 	}
 

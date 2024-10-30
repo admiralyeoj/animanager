@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/admiralyeoj/animanager/internal/repository"
-	"github.com/admiralyeoj/animanager/internal/service"
+	AniListSrv "github.com/admiralyeoj/animanager/internal/aniList/service"
 )
 
 // ImportScheduledAnimeCronJob struct implements CronJobInterface
@@ -14,12 +13,14 @@ type ImportScheduledAnimeCronJob struct {
 	Expression   string
 	LastRun      *time.Time
 	NextRun      *time.Time
+	aniListSrv   *AniListSrv.AniListService
 }
 
 // NewImportScheduledAnimeCronJob creates a new ImportScheduledAnimeCronJob instance
-func NewImportScheduledAnimeCronJob() *ImportScheduledAnimeCronJob {
+func NewImportScheduledAnimeCronJob(aniListSrv *AniListSrv.AniListService) *ImportScheduledAnimeCronJob {
 	return &ImportScheduledAnimeCronJob{
 		FunctionName: "importScheduledAnime",
+		aniListSrv:   aniListSrv,
 	}
 }
 
@@ -33,7 +34,7 @@ func (j *ImportScheduledAnimeCronJob) GetCronExpression() string {
 }
 
 // Handler executes the job logic
-func (j *ImportScheduledAnimeCronJob) Handler(srvs *service.Services, repos *repository.Repositories, params map[string]interface{}) error {
+func (j *ImportScheduledAnimeCronJob) Handler(params map[string]interface{}, args ...interface{}) error {
 
 	format := "01/02/2006"
 
@@ -41,7 +42,7 @@ func (j *ImportScheduledAnimeCronJob) Handler(srvs *service.Services, repos *rep
 	date, _ := time.Parse(format, startDate)
 	endDate := date.AddDate(0, 0, 1).Format(format)
 
-	err := srvs.AniListSrv.ImportUpcomingAnime(startDate, endDate)
+	err := (*j.aniListSrv).ImportUpcomingAnime(startDate, endDate)
 	if err != nil {
 		return fmt.Errorf("error importing anime: %w", err)
 	}
