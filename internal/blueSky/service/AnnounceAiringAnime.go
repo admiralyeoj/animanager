@@ -28,7 +28,7 @@ func (srv *blueSkyService) AnnounceAiringAnime() error {
 	t := time.Unix(airing.AiringAt, 0)
 
 	// Format the time.Time object to M/D/Y H:I:s AM/PM
-	formattedTime := t.Format("1/2/2006 3:4:05 PM") // M/D/Y H:I:s AM/PM format
+	formattedTime := t.Format("1/2/2006 3:04:05 PM") // M/D/Y H:I:s AM/PM format
 
 	text := airing.Media.Title.English + " Episode " + strconv.Itoa(airing.Episode) + " started airing at " + formattedTime + " EST \n\n"
 
